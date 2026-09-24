@@ -1,3 +1,4 @@
 *.mp4
 *.mov
 __pycache__/
+*.wav
