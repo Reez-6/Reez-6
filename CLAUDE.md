@@ -30,7 +30,8 @@ Dr. Medhat records short clips (a warning-signs list, a how-to, a myth-buster) f
 ## 2. Prerequisites & install (do this once)
 
 Needs: **ffmpeg**, **Python 3** with **Pillow**, **Google Chrome** (for correct Arabic shaping), and
-**one whisper backend** for transcription.
+**one whisper backend** for transcription (`pip install sherpa-onnx soundfile` — used by `transcribe.py`;
+models auto-download from GitHub releases, so it works where huggingface.co is blocked).
 
 **macOS**
 ```bash

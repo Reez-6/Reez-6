@@ -1,0 +1,21 @@
+[
+ {"id":"q","t0":0.00,"t1":8.70,"kind":"caption",
+  "en_cap":"How many guests have come to you that gave you something in the moment — on or off podcast — that really stuck with you?",
+  "ar_cap":"كم ضيفًا منحك شيئًا في تلك اللحظة، داخل البودكاست أو خارجه، وبقي راسخًا في ذهنك؟"},
+
+ {"id":"a1","t0":8.70,"t1":10.55,"kind":"caption",
+  "en_cap":"Yeah, I can think of a few.",
+  "ar_cap":"نعم، أستطيع أن أتذكّر بعضهم."},
+
+ {"id":"a2","t0":10.55,"t1":15.20,"kind":"caption",
+  "en_cap":"Can I tell you a few? — Please.",
+  "ar_cap":"هل أخبرك ببعضهم؟ — تفضّل."},
+
+ {"id":"kobe","t0":15.20,"t1":23.70,"kind":"caption",
+  "en_cap":"I had the privilege and fortune of interviewing Kobe Bryant in 2019.",
+  "ar_cap":"حظيت بشرف وفرصة إجراء مقابلة مع كوبي براينت عام ٢٠١٩."},
+
+ {"id":"last","t0":23.70,"t1":30.00,"kind":"caption",
+  "en_cap":"I believe it was one of the last interviews he ever did. Sadly, of course, we lost him…",
+  "ar_cap":"أعتقد أنها كانت من آخر المقابلات التي أجراها. وللأسف، بالطبع، فقدناه…"}
+]
