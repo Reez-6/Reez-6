@@ -1,0 +1,35 @@
+[
+ {"id":"title","t0":0.10,"t1":5.20,"kind":"title",
+  "en_title":"5 signs to call the doctor <b>now</b> — not tomorrow",
+  "ar_title":"٥ علامات تستدعي الاتصال بالطبيب <b>الآن</b> — وليس غدًا"},
+
+ {"id":"s1","t0":5.20,"t1":11.00,"kind":"sign","n":1,"total":5,"icon":"thermo",
+  "en_lab":"Fever","ar_lab":"حمّى",
+  "en_cap":"Fever of 38°C or more — in a baby 3 months or younger.",
+  "ar_cap":"حمّى ٣٨° مئوية أو أكثر لدى رضيع عمره ٣ أشهر أو أقل."},
+
+ {"id":"s2","t0":11.00,"t1":13.90,"kind":"sign","n":2,"total":5,"icon":"bottle",
+  "en_lab":"Feeding refusal","ar_lab":"رفض الرضاعة",
+  "en_cap":"Refusing to feed for 6 to 8 hours.",
+  "ar_cap":"رفض الرضاعة لمدة ٦ إلى ٨ ساعات."},
+
+ {"id":"s3","t0":13.90,"t1":16.90,"kind":"sign","n":3,"total":5,"icon":"eye",
+  "en_lab":"Hard to wake","ar_lab":"صعوبة الإيقاظ",
+  "en_cap":"Hard to wake, or not alert when awake.",
+  "ar_cap":"صعوبة في الإيقاظ أو قلة الانتباه عند الاستيقاظ."},
+
+ {"id":"s4","t0":16.90,"t1":20.60,"kind":"sign","n":4,"total":5,"pip":"pip_breath.png",
+  "en_lab":"Breathing","ar_lab":"التنفّس",
+  "en_cap":"Breathing fast, grunting, or pulling at the ribs.",
+  "ar_cap":"تنفّس سريع، أو أنين، أو انسحاب الأضلاع عند التنفّس."},
+
+ {"id":"s5","t0":20.60,"t1":23.10,"kind":"sign","n":5,"total":5,"icon":"drop",
+  "en_lab":"Wet diapers","ar_lab":"التبوّل",
+  "en_cap":"Fewer than 4 wet diapers in 24 hours.",
+  "ar_cap":"أقل من ٤ حفاضات مبللة خلال ٢٤ ساعة."},
+
+ {"id":"rf","t0":23.10,"t1":33.30,"kind":"redflags",
+  "en_head":"ALSO SEEK CARE NOW","ar_head":"اطلب الرعاية فورًا أيضًا",
+  "en_chips":["Blue / grey skin","Seizures","Forceful vomiting","Blood in stool","Bulging soft spot"],
+  "ar_chips":["ازرقاق الجلد","تشنّجات","قيء نافوري","دم في البراز","انتفاخ اليافوخ"]}
+]
