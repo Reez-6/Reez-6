@@ -15,11 +15,14 @@ SCRIPT (JSON)  — a list of state objects, contiguous in time so they tile the 
    "en_lab":"Fever","ar_lab":"حمّى",
    "en_cap":"Fever of 38°C ...","ar_cap":"حمّى ٣٨° ..."}
   kinds: "title" (en_title/ar_title) · "sign" (n, icon OR pip, *_lab, *_cap) ·
-         "redflags" (en_head/ar_head, en_chips/ar_chips) · "cta" (en_title/ar_title)
+         "redflags" (en_head/ar_head, en_chips/ar_chips) · "cta" (en_title/ar_title) ·
+         "caption" (en_cap/ar_cap only — a plain spoken-line bar, no stepper or media chip)
   icon keys -> app-tinted chips (see ICONSET): thermo(fever) | bottle(feeding) | eye(hard-to-wake)
          | drop(diaper) | lungs(breathing).  Use "pip":"file.png" instead for a mannequin demo-zoom.
 Fonts + icons/ load from THIS folder; "pip" images resolve next to the script.
 Default layout is the APPROVED lower stepper (--variant bottom). Chrome auto-detected (or set CHROME_PATH).
+--no-name drops the Dr. Medhat name (for clips he isn't in). Non-1080x1920 9:16 video is fine: the
+overlay is drawn at 1080x1920 and scaled to the video's size.
 """
 import os, sys, json, argparse, subprocess, tempfile, shutil
 
@@ -105,10 +108,10 @@ html,body{background:transparent;}
 .conn.done{background:var(--teal);}
 """
 
-def stage_inner(s, lang, script_dir, variant="top"):
+def stage_inner(s, lang, script_dir, variant="top", name=True):
     ar = (lang == "ar")
     nm_a = "د. مدحت أبو شعبان" if ar else "Dr. Medhat Abu-Shaaban"
-    parts = [f'<div class="name"><div class="a">{nm_a}</div></div>']
+    parts = [f'<div class="name"><div class="a">{nm_a}</div></div>'] if name else []
     k = s["kind"]
     if k in ("title", "cta"):
         inner = f'<div class="big">{s["ar_title" if ar else "en_title"]}</div><div class="rule"></div>'
@@ -144,6 +147,8 @@ def stage_inner(s, lang, script_dir, variant="top"):
                      f'{svgmarkup}</span>')
         parts.append(f'<div class="capbar">{media}'
                      f'<span class="t">{s["ar_cap" if ar else "en_cap"]}</span></div>')
+    elif k == "caption":
+        parts.append(f'<div class="capbar"><span class="t">{s["ar_cap" if ar else "en_cap"]}</span></div>')
     elif k == "redflags":
         head = s["ar_head" if ar else "en_head"]
         chips = "".join(f'<div class="chip"><span class="d"></span>{c}</div>'
@@ -151,7 +156,7 @@ def stage_inner(s, lang, script_dir, variant="top"):
         parts.append(f'<div class="rf"><span class="head">{head}</span><div class="grid">{chips}</div></div>')
     return "\n".join(parts)
 
-def build(video, script_path, lang, out, variant="bottom"):
+def build(video, script_path, lang, out, variant="bottom", name=True):
     ar = (lang == "ar")
     states = json.load(open(script_path, encoding="utf-8"))
     script_dir = os.path.dirname(os.path.abspath(script_path))
@@ -167,7 +172,7 @@ def build(video, script_path, lang, out, variant="bottom"):
     pngs = []
     for i, s in enumerate(states):
         doc = (f'<!doctype html><html{" dir=rtl" if ar else ""}><head><meta charset="utf-8">'
-               f'<style>{css}</style></head><body><div class="stage">{stage_inner(s,lang,script_dir,variant)}</div></body></html>')
+               f'<style>{css}</style></head><body><div class="stage">{stage_inner(s,lang,script_dir,variant,name)}</div></body></html>')
         hp = os.path.join(pngdir, f"ov_{i}.html"); open(hp, "w", encoding="utf-8").write(doc)
         pp = os.path.join(pngdir, f"ov_{i}.png"); pngs.append(pp)
         # Chrome refuses to start as root (Linux containers) unless the sandbox is disabled.
@@ -175,12 +180,16 @@ def build(video, script_path, lang, out, variant="bottom"):
         subprocess.run([CHROME,"--headless","--disable-gpu","--hide-scrollbars","--force-device-scale-factor=1",
                         "--default-background-color=00000000","--window-size=1080,1920", *nosb,
                         f"--screenshot={pp}", f"file://{hp}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    vw, vh = subprocess.run(["ffprobe","-v","error","-select_streams","v:0","-show_entries","stream=width,height",
+                             "-of","csv=p=0",video], capture_output=True, text=True, check=True).stdout.strip().split(",")[:2]
     inputs, filt, last = [], [], "0:v"
     for i, s in enumerate(states):
-        inputs += ["-i", pngs[i]]; nxt = f"v{i}"
+        inputs += ["-i", pngs[i]]; nxt = f"v{i}"; ov = f"{i+1}:v"
+        if (vw, vh) != ("1080", "1920"):  # overlay is drawn at 1080x1920; fit it to the video
+            filt.append(f"[{ov}]scale={vw}:{vh}:flags=lanczos[o{i}]"); ov = f"o{i}"
         # end 0.02s (< 1 frame @30fps) before t1 so the boundary frame belongs to the NEXT state only —
         # otherwise between() is inclusive on both ends and two overlays double-draw for one frame (a flash).
-        filt.append(f"[{last}][{i+1}:v]overlay=0:0:enable='between(t,{s['t0']:.3f},{s['t1']-0.02:.3f})'[{nxt}]")
+        filt.append(f"[{last}][{ov}]overlay=0:0:enable='between(t,{s['t0']:.3f},{s['t1']-0.02:.3f})'[{nxt}]")
         last = nxt
     cmd = (["ffmpeg","-v","error","-stats","-i",video] + inputs +
            ["-filter_complex",";".join(filt),"-map",f"[{last}]","-map","0:a?",
@@ -194,4 +203,5 @@ if __name__ == "__main__":
     ap.add_argument("--lang", default="en", choices=["en","ar"]); ap.add_argument("--out", required=True)
     ap.add_argument("--variant", default="bottom", choices=["top","bottom"],
                     help="bottom = numbered stepper in lower zone (APPROVED v2, default); top = old top-right pill (v1, deprecated)")
-    a = ap.parse_args(); build(a.video, a.script, a.lang, a.out, a.variant)
+    ap.add_argument("--no-name", action="store_true", help="omit the Dr. Medhat name (clips he isn't in)")
+    a = ap.parse_args(); build(a.video, a.script, a.lang, a.out, a.variant, not a.no_name)
