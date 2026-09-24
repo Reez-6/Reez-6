@@ -1,0 +1,19 @@
+[
+ {"id":"title","t0":0.00,"t1":3.60,"kind":"title",
+  "en_title":"Your next watch is <b>waiting</b>",
+  "ar_title":"ساعتك القادمة <b>بانتظارك</b>"},
+
+ {"id":"browse","t0":3.60,"t1":10.80,"kind":"caption",
+  "en_lab":"TORNADO","ar_lab":"تورنادو",
+  "en_cap":"Explore the collection",
+  "ar_cap":"اكتشف المجموعة"},
+
+ {"id":"try","t0":10.80,"t1":13.40,"kind":"caption",
+  "en_cap":"Try it on. Find your fit.",
+  "ar_cap":"جرّبها واختر ما يناسبك"},
+
+ {"id":"visit","t0":13.40,"t1":18.10,"kind":"caption",
+  "en_lab":"TIME HOUSE","ar_lab":"تايم هاوس",
+  "en_cap":"Visit us in store today",
+  "ar_cap":"زورونا في المتجر اليوم"}
+]
